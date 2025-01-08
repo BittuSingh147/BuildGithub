@@ -57,3 +57,69 @@ alias mygit=/path/to/your/repo/your_program.sh
 mkdir -p /tmp/testing && cd /tmp/testing
 mygit init
 ```
+Git Blob Object Storage Implementation
+This project implements a basic version of Git's object storage, specifically focusing on the git hash-object command. The goal is to create, hash, and optionally store a blob object in a Git-like structure.
+
+Overview
+In this step, you will implement the logic to:
+
+Compute the SHA-1 hash of a file, including its header (blob <size>\0).
+Store the file as a blob object in a .git/objects directory, similar to how Git handles objects.
+If requested, compress the object using zlib before storing it in the .git/objects directory.
+Requirements
+The program should print the SHA-1 hash of the file to the console.
+If the -w flag is passed, it should store the object in a .git/objects directory. The object should be compressed before storage using zlib.
+The object storage directory should be organized by the first two characters of the SHA-1 hash.
+How It Works
+Step-by-Step Process
+File Reading:
+
+The program reads the contents of the file you specify.
+Header Creation:
+
+A header is created in the format: blob <file_size>\0, where <file_size> is the byte length of the file content, and \0 is a null byte.
+Hashing:
+
+The program combines the header and the file contents, then computes the SHA-1 hash over the combined data.
+Compression (Optional):
+
+If the -w flag is passed, the program compresses the object (the header + file contents) using zlib and stores it in a folder structure within .git/objects/, organized by the first two characters of the hash.
+Output:
+
+The program outputs the 40-character SHA-1 hash of the object.
+Example
+1. Initialize the Git repository:
+bash
+Copy code
+$ ./your_program.sh init
+2. Hash a file and print its hash:
+bash
+Copy code
+$ ./your_program.sh hash-object <file_path>
+Example:
+
+bash
+Copy code
+$ ./your_program.sh hash-object test.txt
+3b18e512dba79e4c8300dd08aeb37f8e728b8dad
+3. Hash and store the object (with -w flag):
+bash
+Copy code
+$ ./your_program.sh hash-object -w test.txt
+This will store the object in .git/objects with the corresponding compressed object file.
+
+Git Object Storage Directory Structure
+The object is stored in the .git/objects/ directory.
+The directory is organized by the first two characters of the SHA-1 hash.
+The remaining characters of the SHA-1 hash are used as the file name.
+For example, for a hash like 3b18e512dba79e4c8300dd08aeb37f8e728b8dad, the file would be stored in .git/objects/3b/18e512dba79e4c8300dd08aeb37f8e728b8dad.
+
+Notes
+The object file is not stored in its raw form. It is compressed using zlib before being saved in .git/objects.
+The program hashes the uncompressed content of the file, including the header (blob <size>\0) and the file content.
+The -w flag is optional. It tells the program to write the object to the .git/objects directory.
+Technologies Used
+Node.js: JavaScript runtime environment.
+fs (File System): For reading files and interacting with the file system.
+crypto: To calculate the SHA-1 hash.
+zlib: For compressing the object before storage.
