@@ -123,8 +123,8 @@ Node.js: JavaScript runtime environment.
 fs (File System): For reading files and interacting with the file system.
 crypto: To calculate the SHA-1 hash.
 zlib: For compressing the object before storage.
-
-git online
+f11861f9345025c71df51cea1c35176ab8c82f9a
+git log
 git cat-file -p a3433598e26e398c85bbf3b95aff96f2649f3947
 node app/main.js cat-file -p a3433598e26e398c85bbf3b95aff96f2649f3947
 git hash-object package.json
