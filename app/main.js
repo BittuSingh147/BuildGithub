@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const GitClient = require("./git/client");
 //commands
-const { CatFileCommand,HashObjectCommand } = require("./git/commands");
+const {
+  CatFileCommand,
+  HashObjectCommand,
+  LSTreeCommand,
+} = require("./git/commands");
 
 const gitClient = new GitClient();
 // Uncomment this block to pass the first stage
@@ -15,9 +19,12 @@ switch (command) {
   case "cat-file":
     handleCatFileCommand();
     break;
-    case "hash-object":
-      handleHashObjectCommand();
-      break;
+  case "hash-object":
+    handleHashObjectCommand();
+    break;
+  case "ls-tree":
+    handlesTreeCommand();
+    break;
   default:
     throw new Error(`Unknown command ${command}`);
 }
@@ -43,14 +50,28 @@ function handleCatFileCommand() {
   gitClient.run(command);
 }
 
-function handleHashObjectCommand(){
+function handleHashObjectCommand() {
   let flag = process.argv[3];
   let filepath = process.argv[4];
 
-  if(!filepath){
+  if (!filepath) {
     filepath = flag;
     flag = null;
   }
- const command = new HashObjectCommand(flag, filepath);
- gitClient.run(command)
+  const command = new HashObjectCommand(flag, filepath);
+  gitClient.run(command);
 }
+
+function handlesTreeCommand() {
+  let flag = process.argv[3];
+  let sha = process.argv[4];
+
+  if (!sha && flag === "---name-only") return;
+  if (!sha) {
+    sha = flag;
+    flag = null;
+  }
+  const command = new LSTreeCommand(flag, sha);
+  gitClient.run(command);
+}
+
